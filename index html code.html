@@ -1,0 +1,151 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scaler=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body{
+            font-family: Arial, sans-seriaf;
+            margin:  0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background: color #333;
+            color: #fff;
+           padding:10px;
+           text-align:center;
+        }
+
+        main{
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        footer{
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+        }
+        form{
+            margin-top:20px;
+        }
+
+        label{
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        select{
+            width: 100px;
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        #predictedprice{
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>House Price Prediction</h3>
+    </header>
+    <main>
+        <p>Welcome to House Price Prediction Model</p>
+    <form if="predictionform"
+        <label for="beds">Beds:</label>
+        <select id="beds" name="beds">
+            <option vslues="{{ bedroom }}">{{bedroom}}</option>
+            {% for bedroom in bedroom %}
+             <option value="{{ bedroom }}">{{ bedroom}}</option>
+            {%endfor %}
+        </select>
+
+        <label for="baths">Baths:</label>
+        <select id="baths" name="baths">
+            <option value=""disabled selected>select number of bathroom</option>
+            {% for bathroom in bathrooms %}
+                <option value="{{ bathroom}}">{{bathroom}}</option>
+            {% endfor %}
+       </select>
+      
+       <label for="size">Size:</label>
+       <select id="size" name="size">
+        <option value="" disabled selected>select size of the house</option>
+         {% for house_size in sizes %}
+            <option value="{{ house_size}}">{{house_size}} sqft</option>
+        {% endfor %}
+       </select>
+      
+       <label for="zip_code">Zipcode:</label>
+       <select id="zip_code" name="zip_code">
+        <option value="" disabled selected>select zip_code</option>
+         {% for zip_codein zip_codes %}
+            <option value="{{ zip_code}}">{{zip_code}}</option>
+         {% endfor %}
+       </select>
+       <button typr="button" onclick="sendData()">predict price</button>
+       <div id="predictedprice"></div>
+    </form>
+       
+       </main>
+       <footer>
+        <p>&copy;2024 House Price Prediction. All rights reversed.</p>
+       </footer>
+       <sccript>
+        function fetchOptions(endpoint, dropdownId){
+            fetch(endpoint)
+                .then(response => reponse.json())
+                .then(data => {
+                    const dropdown = document.getElementbyId(dropdownId);
+                    dropdown.innerHTML = '<option value="" disabled selected>select an option</option>';
+                    data.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        dropdown.innerHTML = '<option value="" disabled selected>select an option</option>';
+                        data.forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option;
+                            optionElement.textContent = option;
+                            dropdown.appendchild(optionElement);
+                        });
+                    });
+                })
+        }
+
+        window.onload = functionn() {
+            fetchOptions('/bedrooms', 'bedds');
+            fetchOptions('/bathrooms', 'baths');
+            fetchOptions('/sizes', 'size');
+            fetchOptions('/zip_codes', 'zip_code');
+        };
+
+        function sendData() {
+            const form = document.getElementById('predictionForm');
+            const formData = new FormData(form);
+
+            fetch('/predict',{
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(price =>{
+                document.getElementById("predictedprice").innerHTML = "price: INR " + price;   
+            });
+        }
+    </sccript>
+</body>
+</html>
